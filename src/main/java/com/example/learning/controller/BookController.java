@@ -3,50 +3,54 @@ package com.example.learning.controller;
 import com.example.learning.model.BookModel;
 import com.example.learning.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import javax.validation.Valid;
 
-@RestController
+@Controller
+@RequestMapping("/books")
 public class BookController {
 
-    @Autowired
     private BookService bookService;
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
-    public List<BookModel> getAllBooks(){
-        return bookService.getAllBooks();
+    //constructor dependency injection
+    @Autowired
+    public BookController(BookService bookService){
+           this.bookService=bookService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public BookModel createBook(@Valid @RequestBody BookModel bookModel){
-        System.out.println(bookModel.toString());
-        return bookService.createBook(bookModel);
+    @RequestMapping(value={"/",""},method= RequestMethod.GET)
+    public ModelAndView getAllBooks(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("books");
+        modelAndView.addObject("books",bookService.getAllBooks());
+        return modelAndView;
     }
 
-    @RequestMapping(value="/{id}",method=RequestMethod.GET)
-    public BookModel getById(@PathVariable long id){
-        return bookService.getById(id);
+    @RequestMapping(value="/create",method = RequestMethod.GET)
+    public ModelAndView createBookGet(String msg){
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("book_form");
+        modelAndView.addObject("book",new BookModel());
+        modelAndView.addObject("msg",msg);
+        return modelAndView;
     }
 
-    @RequestMapping(value="/name/{name}",method=RequestMethod.GET)
-    public BookModel getBookByName(@PathVariable String name){
-        return bookService.getBookByName(name);
-    }
-
-    @RequestMapping(value="/author/{author}",method=RequestMethod.GET)
-    public BookModel getBookByAuthor(@PathVariable String author){
-        return bookService.getBookByAuthor(author);
-    }
-
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    public void deleteBook(@PathVariable long id){
-         bookService.deleteBook(id);
-    }
-
-    @RequestMapping(value = "/delete/{name}",method = RequestMethod.DELETE)
-    public void deleteBook(@PathVariable String name){
-        bookService.deleteBookByName(name);
+    @RequestMapping(value="/create",method = RequestMethod.POST)
+    public ModelAndView createBookPost(@Valid BookModel bookModel, BindingResult bindingResult){
+          ModelAndView modelAndView =new ModelAndView();
+          if(bindingResult.hasErrors()){
+              modelAndView.setViewName("book_form");
+              modelAndView.addObject("msg","Failed to create book");
+              modelAndView.addObject("book",bookModel);
+          }else{
+              bookService.createBook(bookModel);
+              modelAndView = createBookGet("Book Created");
+          }
+          return modelAndView;
     }
 }
