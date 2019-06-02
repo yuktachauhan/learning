@@ -45,6 +45,6 @@ public class BookServiceImp implements BookService {
 
     @Override
     public void deleteBookByName(String name) {
-            bookRepository.deleteByName(name);
+            bookRepository.deleteBookByName(name);
     }
 }

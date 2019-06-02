@@ -47,7 +47,7 @@ public class BookRestController {
     }
 
     @RequestMapping(value = "/delete/name/{name}",method = RequestMethod.DELETE)
-    public void deleteBook(@PathVariable String name){
+    public void deleteBookByName(@PathVariable String name){
         bookService.deleteBookByName(name);
     }
 }
