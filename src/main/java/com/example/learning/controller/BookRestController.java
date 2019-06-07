@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import javax.validation.Valid;
 
+//for creating api
 @RestController
 @RequestMapping(value="/api/books")
 public class BookRestController {
