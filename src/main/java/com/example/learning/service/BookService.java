@@ -17,4 +17,7 @@ public interface BookService {
     void deleteBook(long id);
 
     void deleteBookByName(String name);
+
+    //for updating the books using PUT request
+    BookModel updateBook(BookModel bookModel,long id);
 }

@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import javax.validation.Valid;
 
-//for creating api
+//json form
 @RestController
 @RequestMapping(value="/api/books")
 public class BookRestController {
 
-    @Autowired
+    @Autowired    //do dependency injection i.e. inject BookService instance to this rest controller
     private BookService bookService;
 
     @RequestMapping(value = {"/",""},method = RequestMethod.GET)
@@ -31,6 +31,13 @@ public class BookRestController {
     public BookModel getById(@PathVariable long id){
         return bookService.getById(id);
     }
+
+    /**
+     * here {id} represent that id is a variable and we annotate it with @PathVariable
+     * here in requestMapping  and in method we use same name
+     * but if we use different name then we have to show that
+     * For Example - if we use {number} the we have to write - (@PathVariable("number") long id)**/
+
 
     @RequestMapping(value="/name/{name}",method=RequestMethod.GET)
     public BookModel getBookByName(@PathVariable String name){
@@ -50,5 +57,10 @@ public class BookRestController {
     @RequestMapping(value = "/delete/name/{name}",method = RequestMethod.DELETE)
     public void deleteBookByName(@PathVariable String name){
         bookService.deleteBookByName(name);
+    }
+
+    @RequestMapping(value = "/update/{id}/",method = RequestMethod.PUT)
+    public BookModel updateBook(@Valid @RequestBody BookModel bookModel,@PathVariable long id){
+       return bookService.updateBook(bookModel,id);
     }
 }

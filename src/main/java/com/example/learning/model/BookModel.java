@@ -33,3 +33,6 @@ public class BookModel {
     @NotEmpty
     private String pages;
 }
+
+//install plugin for lombok from settings so that all getters,setters etc. can be used
+

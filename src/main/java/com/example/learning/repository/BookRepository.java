@@ -14,4 +14,5 @@ public interface BookRepository extends JpaRepository<BookModel,Long> {
     Optional<BookModel> findByAuthor(String author);
 
     Optional<Void> deleteBookByName(String name);
+
 }
